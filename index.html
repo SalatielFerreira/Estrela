@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>G.R.E.S. Estrela de Prata · São José dos Campos</title>
+  <meta name="description" content="Escola de samba Estrela de Prata, fundada em 15 de maio de 2000 em São José dos Campos - SP. Agenda, ensaios e segmentos.">
+  <meta name="theme-color" content="#040f2e">
+  <link rel="icon" href="img/estrela.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/logo-estandarte.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/dados.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body data-pagina="inicio">
+  <header class="topo" id="topo"></header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__logo">
+          <img src="img/logo-estandarte.jpg" width="645" height="799"
+               alt="Brasão do Grêmio Recreativo Escola de Samba Estrela de Prata, fundada em 15 de maio de 2000">
+        </div>
+        <div>
+          <h1>Estrela<br>de Prata</h1>
+          <p class="hero__sub">Escola de samba de São José dos Campos · desde 2000</p>
+        </div>
+        <div class="hero__acoes">
+          <a class="btn btn--ouro" href="agenda.html">Agenda</a>
+          <a class="btn btn--vidro" href="ensaios.html">Ensaios</a>
+        </div>
+        <p class="contagem" id="contagem"></p>
+      </div>
+    </section>
+    <div class="faixa"></div>
+
+    <div class="container container--estreito conteudo">
+      <h2 class="titulo-secao">Próximas datas <a href="agenda.html">Ver tudo</a></h2>
+      <div id="proximos"></div>
+
+      <h2 class="titulo-secao">Segmentos</h2>
+      <div class="tiles" data-tiles></div>
+
+      <a class="insta" data-instagram href="#" target="_blank" rel="noopener">
+        <span class="insta__icone" data-icone="instagram"></span>
+        <span class="linha__txt"><strong>Siga a Estrela no Instagram</strong><span data-instagram-user></span></span>
+        <span class="seta-linha" data-icone="direita"></span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="rodape" id="rodape"></footer>
+  <nav class="barra-inferior" id="barra-inferior"></nav>
+</body>
+</html>
