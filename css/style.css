@@ -682,7 +682,48 @@ a.linha:hover { background: #fafbfd; }
   .cabeca { padding-block: 44px; }
 }
 
+/* =====================================================================
+   Transição entre páginas (deslizar para o lado)
+   ===================================================================== */
+@view-transition { navigation: auto; }
+
+/* Topo e barra de baixo ficam parados; só o conteúdo desliza */
+.topo { view-transition-name: topo; }
+.barra-inferior { view-transition-name: barra; }
+::view-transition-group(topo),
+::view-transition-group(barra) { animation-duration: 0.2s; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+html[data-transicao="avancar"]::view-transition-old(root) { animation-name: sai-para-esquerda; }
+html[data-transicao="avancar"]::view-transition-new(root) { animation-name: entra-pela-direita; }
+html[data-transicao="voltar"]::view-transition-old(root) { animation-name: sai-para-direita; }
+html[data-transicao="voltar"]::view-transition-new(root) { animation-name: entra-pela-esquerda; }
+html[data-transicao="nenhuma"]::view-transition-old(root),
+html[data-transicao="nenhuma"]::view-transition-new(root) { animation: none; }
+
+@keyframes entra-pela-direita { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes sai-para-esquerda  { from { transform: none; } to { transform: translateX(-100%); } }
+@keyframes entra-pela-esquerda { from { transform: translateX(-100%); } to { transform: none; } }
+@keyframes sai-para-direita   { from { transform: none; } to { transform: translateX(100%); } }
+
+/* Navegadores sem transição nativa: a página nova entra deslizando */
+html.transicao-simples[data-transicao="avancar"] main,
+html.transicao-simples[data-transicao="avancar"] .rodape { animation: entra-curto-direita 0.35s cubic-bezier(0.22, 0.8, 0.24, 1) both; }
+html.transicao-simples[data-transicao="voltar"] main,
+html.transicao-simples[data-transicao="voltar"] .rodape { animation: entra-curto-esquerda 0.35s cubic-bezier(0.22, 0.8, 0.24, 1) both; }
+@keyframes entra-curto-direita { from { transform: translateX(60px); opacity: 0; } }
+@keyframes entra-curto-esquerda { from { transform: translateX(-60px); opacity: 0; } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
 }

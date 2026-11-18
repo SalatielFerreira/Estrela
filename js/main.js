@@ -554,7 +554,10 @@
     capa.className = "protecao";
     capa.setAttribute("aria-hidden", "true");
     document.body.appendChild(capa);
-    function ocultar() { document.documentElement.classList.add("oculto"); }
+    function ocultar() {
+      if (window.__epNavegando) return; // trocando de página dentro do site
+      document.documentElement.classList.add("oculto");
+    }
     function mostrar() { document.documentElement.classList.remove("oculto"); }
     window.addEventListener("blur", () => {
       // tocar no mapa (iframe) também tira o foco da página: nesse caso não escurece
