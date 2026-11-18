@@ -517,7 +517,61 @@
     });
   }
 
+  /* ---------------- Proteção do conteúdo ----------------
+     Bloqueia copiar, menu de contexto, arrastar e zoom, e cobre a tela
+     de preto quando o site perde o foco (troca de app, ferramenta de
+     recorte, impressão). Obs.: o print do sistema do celular não pode
+     ser bloqueado por nenhum site. */
+  function protegerConteudo() {
+    const editavel = (el) => el && el.closest && el.closest("input, textarea, select");
+    const bloquear = (e) => { if (!editavel(e.target)) e.preventDefault(); };
+    ["copy", "cut", "contextmenu", "selectstart", "dragstart"].forEach((t) => document.addEventListener(t, bloquear));
+
+    // Atalhos de teclado: copiar, recortar, selecionar tudo, salvar, imprimir, código-fonte, zoom
+    document.addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && ["c", "x", "a", "s", "p", "u", "+", "-", "=", "0"].includes(k)) e.preventDefault();
+      if (k === "printscreen") ocultar();
+    });
+    document.addEventListener("keyup", (e) => {
+      if ((e.key || "").toLowerCase() === "printscreen") {
+        ocultar();
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("").catch(() => {});
+        setTimeout(mostrar, 1500);
+      }
+    });
+
+    // Zoom: pinça (iPhone), dois dedos (Android) e Ctrl + roda do mouse
+    ["gesturestart", "gesturechange", "gestureend"].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
+    document.addEventListener("touchmove", (e) => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+    document.addEventListener("wheel", (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+
+    // Imagens não arrastáveis
+    $$("img").forEach((img) => img.setAttribute("draggable", "false"));
+
+    // Capa preta
+    const capa = document.createElement("div");
+    capa.className = "protecao";
+    capa.setAttribute("aria-hidden", "true");
+    document.body.appendChild(capa);
+    function ocultar() { document.documentElement.classList.add("oculto"); }
+    function mostrar() { document.documentElement.classList.remove("oculto"); }
+    window.addEventListener("blur", () => {
+      // tocar no mapa (iframe) também tira o foco da página: nesse caso não escurece
+      setTimeout(() => {
+        if (!(document.activeElement && document.activeElement.tagName === "IFRAME")) ocultar();
+      }, 0);
+    });
+    window.addEventListener("focus", mostrar);
+    document.addEventListener("visibilitychange", () => (document.hidden ? ocultar() : mostrar()));
+    window.addEventListener("pagehide", ocultar);
+    window.addEventListener("pageshow", mostrar);
+    window.addEventListener("beforeprint", ocultar);
+    window.addEventListener("afterprint", mostrar);
+  }
+
   function iniciar() {
+    protegerConteudo();
     montarTopo();
     montarGaveta();
     montarBarra();
